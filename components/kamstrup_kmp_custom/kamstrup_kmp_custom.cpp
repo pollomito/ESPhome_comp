@@ -143,10 +143,12 @@ void KamstrupKMPComponent::read_command_(uint16_t command) {
     if (this->available()) {
       data = this->read();
       if (data > -1) {
-        if (data == 0x40) {  // start of message
+        if (data == 0x40) && ((buffer_len == 0) || (buffer_len == 7))  // 0 if no echo, 7 if echo (tx mess len = 7)
+		{  // start of message
 		  startfound = 1;
           buffer_len = 0;
         }
+		
         buffer[buffer_len++] = (uint8_t) data;
         if ((data == 0x0D) && (startfound == 1)) {
           break;
@@ -159,6 +161,8 @@ void KamstrupKMPComponent::read_command_(uint16_t command) {
       timeout--;
     }
   }
+ 
+		  
 
   if (timeout == 0 || buffer_len == 0) {
     ESP_LOGE(TAG, "Request timed out");
