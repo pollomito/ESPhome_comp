@@ -137,6 +137,7 @@ void KamstrupKMPComponent::read_command_(uint16_t command) {
   size_t buffer_len = 0;
   int data;
   int timeout = 500;  // ms
+  int startfound = 0;
 
   // Read the data from the UART
   while (timeout > 0 && buffer_len < sizeof(buffer))
@@ -146,14 +147,13 @@ void KamstrupKMPComponent::read_command_(uint16_t command) {
       data = this->read();
       if (data > -1)
 	  {
-		  ESP_LOGE(TAG, "data  0x%02X, len ", data, buffer_len);
         if ((data == 0x40) && ((buffer_len == 0) || (buffer_len == 9)))  // 0 if no echo, 9 if echo (tx mess len = 9)
 		{  // start of message
-			ESP_LOGE(TAG, "Start at %d", buffer_len);
+		  startfound = 1;
           buffer_len = 0;
         }
         buffer[buffer_len++] = (uint8_t) data;
-        if (data == 0x0D) {
+        if ((data == 0x0D) && (startfound == 1))
           break;
         }
       } else {
