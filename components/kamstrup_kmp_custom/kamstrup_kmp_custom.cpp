@@ -153,7 +153,7 @@ void KamstrupKMPComponent::read_command_(uint16_t command) {
           buffer_len = 0;
         }
         buffer[buffer_len++] = (uint8_t) data;
-        if ((data == 0x0D) && (startfound == 1))
+        if ((data == 0x0D) && (startfound == 1)) {
           break;
         }
       } else {
