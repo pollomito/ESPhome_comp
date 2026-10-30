@@ -5,6 +5,7 @@ from esphome.const import (
     CONF_COMMAND,
     CONF_CUSTOM,
     CONF_FLOW,
+    CONF_ID,
     CONF_POWER,
     CONF_VOLUME,
     DEVICE_CLASS_EMPTY,
@@ -76,7 +77,7 @@ CONFIG_SCHEMA = (
             ),
             cv.Optional(CONF_FLOW): sensor.sensor_schema(
                 accuracy_decimals=1,
-                device_class=DEVICE_CLASS_VOLUME,
+                device_class=DEVICE_CLASS_VOLUME_FLOW_RATE,
                 state_class=STATE_CLASS_MEASUREMENT,
                 unit_of_measurement=UNIT_LITRE_PER_HOUR,
             ),
@@ -112,7 +113,9 @@ FINAL_VALIDATE_SCHEMA = uart.final_validate_device_schema(
 
 
 async def to_code(config: ConfigType) -> None:
-    var = await uart.new_uart_component(config)
+    var = cg.new_Pvariable(config[CONF_ID])
+    await cg.register_component(var, config)
+    await uart.register_uart_device(var, config)
 
     # Standard sensors
     for key in [

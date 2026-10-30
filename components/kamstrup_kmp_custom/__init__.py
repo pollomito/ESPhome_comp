@@ -1,1 +1,0 @@
-DOMAIN = "kamstrup_kmp_custom"
