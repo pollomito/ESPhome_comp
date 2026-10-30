@@ -133,16 +133,20 @@ void KamstrupKMPComponent::clear_uart_rx_buffer_() {
 }
 
 void KamstrupKMPComponent::read_command_(uint16_t command) {
-  uint8_t buffer[20] = {0};
+  uint8_t buffer[30] = {0};
   size_t buffer_len = 0;
   int data;
-  int timeout = 250;  // ms
+  int timeout = 500;  // ms
 
   // Read the data from the UART
-  while (timeout > 0 && buffer_len < sizeof(buffer)) {
-    if (this->available()) {
+  while (timeout > 0 && buffer_len < sizeof(buffer))
+  {
+    if (this->available())
+	{
       data = this->read();
-      if (data > -1) {
+      if (data > -1)
+	  {
+		  ESP_LOGE(TAG, "data  0x%02X", buffer_len);
         if ((data == 0x40) && ((buffer_len == 0) || (buffer_len == 9)))  // 0 if no echo, 9 if echo (tx mess len = 9)
 		{  // start of message
 			ESP_LOGE(TAG, "Start at %d", buffer_len);
