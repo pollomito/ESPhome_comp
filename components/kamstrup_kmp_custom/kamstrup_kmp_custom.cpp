@@ -146,7 +146,7 @@ void KamstrupKMPComponent::read_command_(uint16_t command) {
       data = this->read();
       if (data > -1)
 	  {
-		  ESP_LOGE(TAG, "data  0x%02X", buffer_len);
+		  ESP_LOGE(TAG, "data  0x%02X, len ", data, buffer_len);
         if ((data == 0x40) && ((buffer_len == 0) || (buffer_len == 9)))  // 0 if no echo, 9 if echo (tx mess len = 9)
 		{  // start of message
 			ESP_LOGE(TAG, "Start at %d", buffer_len);
