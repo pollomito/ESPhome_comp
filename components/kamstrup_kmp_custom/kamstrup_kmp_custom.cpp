@@ -143,7 +143,8 @@ void KamstrupKMPComponent::read_command_(uint16_t command) {
     if (this->available()) {
       data = this->read();
       if (data > -1) {
-        if (data == 0x40) {  // start of message
+        if ((data == 0x40) && ((buffer_len == 0) || (buffer_len == 9)))  // 0 if no echo, 9 if echo (tx mess len = 9)
+		{  // start of message
           buffer_len = 0;
         }
         buffer[buffer_len++] = (uint8_t) data;
